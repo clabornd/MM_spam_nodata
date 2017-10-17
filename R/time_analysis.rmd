@@ -1,0 +1,62 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r configuruation}
+
+source("R/requirements.R")
+
+fraud_messages <- load_fraud_messages()
+regular_messages <- load_regular_messages()
+ggthemr(palette = "flat dark",
+        type = "outer",
+        layout = "clean")
+```
+
+
+```{r sender_counts}
+
+fraud_sender_counts <- 
+  fraud_messages %>% 
+  mutate(type = "fraud") %>% 
+  group_by(sender_user_id, type) %>% 
+  summarise(msg_count = n())
+
+
+reg_sender_counts <- 
+  regular_messages %>% 
+  mutate(type = "regular") %>% 
+  group_by(sender_user_id,type) %>% 
+  summarise(msg_count = n())
+  
+  
+sender_counts <- 
+  bind_rows(fraud_sender_counts,
+            reg_sender_counts)
+
+
+sender_counts %>% 
+  ggplot(aes(x = msg_count,
+             fill = type)) +
+  geom_histogram(bins = 50) +
+  scale_x_log10() +
+  rotate_x_text(45)
+  
+```
+
+```{r time_delta_messages}
+
+fraud_messages %>% 
+  group_by(sender_user_id) %>% 
+  select(created) %>% 
+  arrange(created) %>% 
+  slice(c(1,n())) %>% 
+  mutate(type = c("min","max"))
+
+```
+

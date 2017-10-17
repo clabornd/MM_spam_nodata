@@ -1,0 +1,78 @@
+---
+title: "\"Interesting\" Words"
+author: "Daniel Claborne"
+date: "September 1, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE, warning = FALSE, message = FALSE}
+source('requirements.R')
+library(knitr)
+library(pander)
+hamtable <- read_csv("Data/prob_table_ham.csv")
+spamtable <- read_csv("Data/prob_table_spam.csv")
+pred_results <- read_csv("Data/test_mail_predictions_914_1001.csv")
+pred_results_1 <- read_csv("Data/test_mail_predictions.csv")
+junjin_words <- read_csv("Data/junjin_words.csv")
+
+fulltable <- inner_join(hamtable, spamtable, by = "token") %>% mutate(ratio = logprob.y/logprob.x)
+
+text <- pred_results[pred_results$type == 0 & pred_results$pred == 1,]
+
+for(i in 1:nrow(text)){
+  text[i,]$message <- paste0(text[i,]$message, "\r\n")
+}
+```
+
+<br>
+
+##**Top 75 "Spammy" terms.**
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+wordcloud2(fulltable %>% top_n(75, wt = 1/ratio) %>% select(token, n.y),
+           size = 0.5,
+           color  = "#2D8DD6",
+           backgroundColor = "#E9EDEF")
+```
+
+<br>
+
+##**Top 75 "Hammy" terms**
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+wordcloud2(fulltable %>% top_n(75, wt = ratio) %>% select(token, n.x),
+           size = 0.5,
+           color  = "#2D8DD6",
+           backgroundColor = "#E9EDEF")
+```
+
+<br>
+
+##**junjin, the scourge of Micromentor**
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+wordcloud2(junjin_words,
+           size = 0.2,
+           color  = "#2D8DD6",
+           backgroundColor = "#E9EDEF")
+```
+
+<br>
+
+##**Actual vs. Predicted**
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+kable(table(pred_results$type, pred_results$pred))
+```
+
+<br>
+
+##**False Positives**
+
+```{r title, results = 'asis', echo = FALSE}
+
+pandoc.verbatim(text$message)
+
+```
+

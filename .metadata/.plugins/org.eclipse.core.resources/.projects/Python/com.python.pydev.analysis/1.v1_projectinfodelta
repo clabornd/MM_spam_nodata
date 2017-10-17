@@ -1,0 +1,10 @@
+INSTUPspam_trainer
+C:\Users\interns\Documents\MM-GIT\Python\spam_trainer.py
+INFOS:&&3|1|2|0&&3|3|2|0&&3|1|2|0&&3|3|2|0&&3|4|2|0&&3|5|2|0&&3|6|2|0&&3|7|2|0
+data=4
+ham=3
+fileObject=7
+file_name=6
+spam_trainer=2
+spam=1
+clf=5

@@ -1,0 +1,32 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\interns\Documents\MM-GIT\.metadata\.plugins\org.eclipse.core.resources\.projects\Python\com.python.pydev.analysis\v2_indexcache
+predict_email|1507824159332035000|C:\Users\interns\Documents\MM-GIT\Python\predict_email.py
+spam_filter|1507758594241563000|C:\Users\interns\Documents\MM-GIT\Python\spam_filter.py
+spam_trainer|1507752473216732000|C:\Users\interns\Documents\MM-GIT\Python\spam_trainer.py
+-- END DISKCACHE
+-- START DICTIONARY
+3
+2=predict_email
+1=spam_filter
+3=spam_trainer
+-- END DICTIONARY
+-- START TREE 1
+13
+clf|9|clf_6!11@clf!19@clf!27@clf_1!11@clf_3!11@clf_5!11@clf_bernoulli!11@clf_2!11@clf_4!11@
+cv|1|cv!11@
+dat|3|data!11@data_loc!19@data!27@
+ema|3|emails!19@emails_pred!19@emails!11@
+fil|3|file_name!27@fileObject!19@fileObject!27@
+ham|2|ham!27@ham!11@
+mod|1|mods!11@
+out|1|out!19@
+pri|1|print_cv_results!10@
+sco|1|scores!11@
+spa|2|spam!27@spam!11@
+wri|1|writer!11@
+y_p|1|y_pred!11@
+-- END TREE
+-- START TREE 2
+0
+-- END TREE

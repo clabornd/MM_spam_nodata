@@ -1,0 +1,99 @@
+---
+title: "Word Cloud"
+message: FALSE
+output:
+  html_document:
+    df_print: paged
+echo: FALSE
+warning: FALSE
+---
+
+Lets create a word cloud of common words in spam messages
+```{r config, echo=FALSE, message=FALSE, warning=FALSE}
+source("requirements.R")
+library(tidytext)
+data("stop_words")
+
+
+fraud_messages <- load_fraud_messages()
+ham_messages <- load_regular_messages()
+
+ggthemr("flat", type = "outer")
+```
+
+```{r count_words, echo=FALSE}
+
+word_counts_spam <- 
+  fraud_messages %>% 
+  select(sender_user_id,message) %>% 
+  group_by(sender_user_id) %>% 
+  unnest_tokens(word,message) %>% 
+  anti_join(stop_words) %>% 
+  group_by(word) %>% 
+  count() %>% 
+  ungroup() %>% 
+  arrange(desc(n))
+
+word_counts_spam %>%
+  top_n(25) %>% 
+  ggplot(aes(x = reorder(word,-n), y = n)) +
+  geom_col() +
+  rotate_x_text(45) +
+  labs( x = "word",
+        y = "Count",
+        title = "Top 25 words in spam messages")
+  
+
+```
+
+```{r word_counts_table, echo=FALSE}
+word_counts_spam
+```
+
+  
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+wordcloud2(word_counts_spam %>% top_n(75),
+           color  = "#2D8DD6",
+           backgroundColor = "#E9EDEF")
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+  word_counts_ham <- 
+    ham_messages %>% 
+    select(sender_user_id,message) %>% 
+    group_by(sender_user_id) %>% 
+    unnest_tokens(word,message) %>% 
+    anti_join(stop_words) %>% 
+    group_by(word) %>% 
+    count() %>% 
+    ungroup() %>% 
+    arrange(desc(n))
+
+  word_counts_ham %>%
+    top_n(25) %>% 
+    ggplot(aes(x = reorder(word,-n), y = n)) +
+    geom_col() +
+    rotate_x_text(45) +
+    labs( x = "word",
+        y = "Count",
+        title = "Top 25 words in legitimate messages")
+```
+
+Let's look at ngrams
+
+```{r eval=FALSE, include=FALSE}
+
+#### TODO: Remove Stop words from Messages column ####
+ngram_count <- 
+  fraud_messages %>% 
+  select(sender_user_id,message) %>%
+  group_by(sender_user_id) %>% 
+  unnest_tokens(word,message,token = "ngrams", n = 2) %>% 
+  group_by(word) %>% 
+  count() %>% 
+  ungroup() %>% 
+  arrange(desc(n))
+
+ngram_count
+```
+

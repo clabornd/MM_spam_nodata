@@ -1,0 +1,10 @@
+INSTUPpredict_email
+C:\Users\interns\Documents\MM-GIT\Python\predict_email.py
+INFOS:&&3|1|2|0&&3|3|2|0&&3|4|2|0&&3|5|2|0&&3|6|2|0&&3|7|2|0
+emails=3
+filename_emails=1
+fileObject=4
+predict_email=2
+clf=5
+emails_pred=6
+out=7

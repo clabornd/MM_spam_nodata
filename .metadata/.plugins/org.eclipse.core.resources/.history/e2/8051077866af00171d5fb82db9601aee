@@ -1,0 +1,25 @@
+import pandas as pd
+import pickle
+import os
+
+### LOAD EMAIL OR BATCH OF EMAILS HERE ###
+### MUST BE IN THE FORMAT OF A CSV WITH "message" column  ###
+emails = pd.read_csv(data_loc, encoding = "ISO-8859-1")
+data_loc = os.path.dirname(__file__)+"/fraud-messages-master.csv"
+
+print(emails)
+## LOAD PICKLED CLASSIFIER ##
+fileObject = open('classifier.p','rb')  
+clf = pickle.load(fileObject)  
+print(clf)
+#
+emails_pred = clf.predict(emails['message'])
+print(emails_pred)
+emails['pred'] = emails_pred
+
+out = emails[['pred', 'email']]
+
+##WRITE EMAIL TO FILE LOCATION###
+out.to_csv(os.path.dirname(__file__)+"/predicted_emails.csv")
+
+ 

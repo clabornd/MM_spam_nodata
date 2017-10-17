@@ -1,0 +1,24 @@
+import pandas as pd
+import pickle
+import os
+
+data_loc = os.path.dirname(__file__)+"/new_emails.csv"
+
+emails = pd.read_csv(data_loc, encoding = "ISO-8859-1")
+### LOAD EMAIL OR BATCH OF EMAILS HERE HERE ###
+### MUST BE A SINGLE VECTOR OF EMAILS ###
+
+## emails = LOADED EMAILS 
+## emails['pred'] = 0
+
+## LOAD PICKLED CLASSIFIER ##
+fileObject = open('classifier.p','rb')  
+clf = pickle.load(fileObject)  
+
+emails_pred = clf.predict(emails)
+# emails['pred'] = y_pred
+# 
+
+print(clf)
+##WRITE EMAIL TO FILE LOCATION###
+ 

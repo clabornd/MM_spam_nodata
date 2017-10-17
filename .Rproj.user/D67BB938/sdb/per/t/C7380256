@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "source(\"R/requirements.R\")\nlibrary(tidytext)\nlibrary(stringr)\n\nfraud_messages <- load_fraud_messages()\nham_messages <- load_regular_messages()\ndata(\"stop_words\")\n\n#priors\np_spam <- nrow(fraud_messages)/(nrow(fraud_messages)+nrow(ham_messages))\np_ham <- 1-p_spam\n\n#remove duplicate messages to prevent overfitting\nfraud_messages <- fraud_messages %>% distinct(message, .keep_all = TRUE)\n\n#get training and test sets\ntrain_indices_fraud <- sample(seq(nrow(fraud_messages)), floor(0.8*nrow(fraud_messages)))\ntrain_indices_ham <- sample(seq(nrow(ham_messages)), floor(0.8*nrow(ham_messages)))\n\nfraud_train <- fraud_messages[train_indices_fraud,]\nfraud_test <- fraud_messages[-train_indices_fraud,]\n\nham_train <- ham_messages[train_indices_ham,]\nham_test <- ham_messages[-train_indices_ham,]\n\nprob_tables <- get_prob_tables(fraud_train, ham_train, multinomial = TRUE)\n\ntest_emails <- rbind(fraud_test %>% select(message), ham_test %>% select(message)) %>%\n  mutate(type = c(rep(1, nrow(fraud_test)), rep(0, nrow(ham_test))))\n\ndf <- test_model(test_emails, prob_tables[[1]], prob_tables[[2]], multinomial = TRUE, prior_ham = p_ham, prior_spam = p_spam)\n\n#evaluate performance, check false positives\ntable(test_emails[test_indices,]$type, test_emails[test_indices,]$pred)\ntable(df$type, df$pred)\n\ndf[df$type == 0 & df$pred == 1,]$message\n\n#junjin\nemails_junjin <- fraud_train %>% filter(grepl(\"junjin\", email) == TRUE)\ncounts_junjin <- get_counts_unique(emails_junjin, message)\n\nwrite_csv(prob_tables[[2]], \"Data/prob_table_ham.csv\")\nwrite_csv(prob_tables[[1]], \"Data/prob_table_spam.csv\")\nwrite_csv(df, \"Data/test_mail_predictions.csv\")\nwrite_csv(counts_junjin, \"Data/junjin_words.csv\")\n\n\n\n\n\n\n\n\n\n\n\n",
+    "created" : 1508277839548.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1911134749",
+    "id" : "C7380256",
+    "lastKnownWriteTime" : 1508267951,
+    "last_content_update" : 1508267951,
+    "path" : "C:/Users/interns/Desktop/MM-GIT/R/train_and_test.R",
+    "project_path" : "R/train_and_test.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
